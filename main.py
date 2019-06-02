@@ -83,7 +83,7 @@ class ExportToMarkdown():
 
         # 获取对应关系
 
-        cur.execute('SELECT * FROM typecho_relationships')
+        cur.execute('select * from typecho_relationships order by cid asc')
         unparse = cur.fetchall()
         relationships = []
         before = 0
@@ -148,10 +148,28 @@ tags: {tags}
 categories: {categories}
 ---
 
-{text}'''
-                f.write(content.format(title=data[0][index], date=data[2][index], tags=data[5][index], categories=data[6][index],
+{text}'''  # tags
+                # data[5][index]
+                tags = '\n'
+                if data[5][index] != ['']:
+                    for tag in data[5][index]:
+                        for t in tag:
+                            tags += '- ' + t + '\n'
+                elif data[5][index] == ['']:
+                    tags = ''
+
+                cates = '\n'
+                if data[6][index] != ['']:
+                    for cate in data[6][index]:
+                        for t in cate:
+                            cates += '- ' + t + '\n'
+                elif data[6][index] == ['']:
+                    cates = ''
+
+                f.write(content.format(title=data[0][index], date=data[2][index], tags=tags,
+                                       categories=cates,
                                        text=data[4][index]))
 
 
 if __name__ == "__main__":
-    pass
+    ExportToMarkdown(host='', user='', database='', passwd='')
