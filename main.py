@@ -32,32 +32,32 @@ class ExportToMarkdown():
         cur = self.cur
         data = []
         # 获取标题
-        cur.execute('SELECT title FROM typecho_contents')
+        cur.execute('SELECT title FROM typecho_contents where type = \'post\'')
         unparse = cur.fetchall()
         title = [i for t in unparse for i in t]
         # print(title)
         data.append(title)
 
         # 获取slug
-        cur.execute('SELECT slug FROM typecho_contents')
+        cur.execute('SELECT slug FROM typecho_contents where type = \'post\'')
         unparse = cur.fetchall()
         slug = [i for t in unparse for i in t]
         data.append(slug)
 
         # 获取创建时间
-        cur.execute('SELECT created FROM typecho_contents')
+        cur.execute('SELECT created FROM typecho_contents where type = \'post\'')
         unparse = cur.fetchall()
         created = [time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i)) for t in unparse for i in t]
         data.append(created)
 
         # 获取修改时间
-        cur.execute('SELECT modified FROM typecho_contents')
+        cur.execute('SELECT modified FROM typecho_contents where type = \'post\'')
         unparse = cur.fetchall()
         modified = [time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i)) for t in unparse for i in t]
         data.append(modified)
 
         # 获取文章内容
-        cur.execute('SELECT text FROM typecho_contents')
+        cur.execute('SELECT text FROM typecho_contents where type = \'post\'')
         unparse = cur.fetchall()
         text = [sub('^<!--markdown-->', '', i) for t in unparse for i in t]
         data.append(text)
@@ -108,8 +108,12 @@ class ExportToMarkdown():
                 for item in relationship[index]:
                     if tags.get(item):
                         parse_tag.append(tags.get(item))
+                    else:
+                        parse_tag.append('')
             if parse_tag:
                 parse_tags.append(parse_tag)
+            else:
+                parse_tags.append([''])
 
             data.append(parse_tags)
             # cates
@@ -145,7 +149,7 @@ categories: {categories}
 ---
 
 {text}'''
-                f.write(content.format(title=data[0][index], date=data[2][index], tags='', categories='',
+                f.write(content.format(title=data[0][index], date=data[2][index], tags=data[5][index], categories=data[6][index],
                                        text=data[4][index]))
 
 
