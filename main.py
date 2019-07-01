@@ -144,8 +144,8 @@ class ExportToMarkdown():
                 content = '''---
 title: {title}
 date: {date}
-tags: {tags}
-categories: {categories}
+updated: {modified}
+tags: {tags}categories: {categories}
 ---
 
 {text}'''  # tags
@@ -156,7 +156,7 @@ categories: {categories}
                         for t in tag:
                             tags += '- ' + t + '\n'
                 elif data[5][index] == ['']:
-                    tags = ''
+                    tags = '\n'
 
                 cates = '\n'
                 if data[6][index] != ['']:
@@ -164,9 +164,9 @@ categories: {categories}
                         for t in cate:
                             cates += '- ' + t + '\n'
                 elif data[6][index] == ['']:
-                    cates = ''
-
-                f.write(content.format(title=data[0][index], date=data[2][index], tags=tags,
+                    cates = '\n'
+                print('处理 ------>  ' + data[0][index])
+                f.write(content.format(title=data[0][index], date=data[2][index],modified=data[3][index], tags=tags,
                                        categories=cates,
                                        text=data[4][index]))
 
